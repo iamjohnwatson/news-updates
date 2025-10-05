@@ -1,0 +1,179 @@
+{
+  "topics": [
+    {
+      "id": "markets",
+      "label": "Markets & Macro",
+      "description": "Global equities, fixed income, FX, central banks, commodities"
+    },
+    {
+      "id": "finance",
+      "label": "Corporate Finance",
+      "description": "Capital markets, corporate earnings, balance sheets, financial strategy"
+    },
+    {
+      "id": "deals",
+      "label": "M&A / Deals",
+      "description": "Mergers, acquisitions, venture deals, restructurings"
+    },
+    {
+      "id": "technology",
+      "label": "Technology & AI",
+      "description": "Big tech, enterprise software, AI, semiconductors"
+    },
+    {
+      "id": "policy",
+      "label": "Policy & Regulation",
+      "description": "Financial regulation, antitrust, geopolitics with market impact"
+    },
+    {
+      "id": "media",
+      "label": "Media & Telecom",
+      "description": "Streaming, telecoms, entertainment, media strategy"
+    },
+    {
+      "id": "startups",
+      "label": "Startups & Venture",
+      "description": "Startups, venture capital, private equity"
+    }
+  ],
+  "sources": [
+    {
+      "id": "the-information",
+      "name": "The Information",
+      "homepage": "https://www.theinformation.com",
+      "supportsTopics": ["technology", "startups", "media"],
+      "endpoints": [
+        {
+          "type": "rss",
+          "topic": "technology",
+          "url": "https://www.theinformation.com/feeds/latest"
+        }
+      ],
+      "notes": "Feed exposes teasers only; automation trims to headline, summary, and link."
+    },
+    {
+      "id": "wsj",
+      "name": "Wall Street Journal",
+      "homepage": "https://www.wsj.com",
+      "supportsTopics": ["markets", "finance", "deals", "policy", "technology"],
+      "endpoints": [
+        {
+          "type": "rss",
+          "topic": "markets",
+          "url": "https://feeds.a.dj.com/rss/RSSMarketsMain.xml"
+        },
+        {
+          "type": "rss",
+          "topic": "finance",
+          "url": "https://feeds.a.dj.com/rss/RSSMarketsMain.xml"
+        },
+        {
+          "type": "rss",
+          "topic": "deals",
+          "url": "https://feeds.a.dj.com/rss/RSSDealBkg.xml"
+        },
+        {
+          "type": "rss",
+          "topic": "technology",
+          "url": "https://feeds.a.dj.com/rss/RSSWSJD.xml"
+        }
+      ],
+      "notes": "Only headline + abstract are consumed to respect paywall."
+    },
+    {
+      "id": "bloomberg",
+      "name": "Bloomberg",
+      "homepage": "https://www.bloomberg.com",
+      "supportsTopics": ["markets", "finance", "policy", "technology"],
+      "endpoints": [
+        {
+          "type": "rss",
+          "topic": "markets",
+          "url": "https://www.bloomberg.com/feed/podcast/etf-report.xml",
+          "fallback": "scrape",
+          "selectors": {
+            "item": "item",
+            "title": "title",
+            "link": "link",
+            "description": "description"
+          }
+        },
+        {
+          "type": "rss",
+          "topic": "technology",
+          "url": "https://www.bloomberg.com/feed/podcast/techtake.xml",
+          "fallback": "scrape",
+          "selectors": {
+            "item": "item",
+            "title": "title",
+            "link": "link",
+            "description": "description"
+          }
+        }
+      ],
+      "notes": "Some feeds are short-form audio; pipeline extracts summary metadata only."
+    },
+    {
+      "id": "ft",
+      "name": "Financial Times",
+      "homepage": "https://www.ft.com",
+      "supportsTopics": ["markets", "finance", "policy", "technology", "deals"],
+      "endpoints": [
+        {
+          "type": "rss",
+          "topic": "markets",
+          "url": "https://www.ft.com/rss/companies"
+        },
+        {
+          "type": "rss",
+          "topic": "policy",
+          "url": "https://www.ft.com/rss/world"
+        },
+        {
+          "type": "rss",
+          "topic": "technology",
+          "url": "https://www.ft.com/rss/technology"
+        }
+      ],
+      "notes": "FT exposes excerpt + link; action respects paywall by linking to source only."
+    },
+    {
+      "id": "techcrunch",
+      "name": "TechCrunch",
+      "homepage": "https://techcrunch.com",
+      "supportsTopics": ["technology", "startups", "deals"],
+      "endpoints": [
+        {
+          "type": "rss",
+          "topic": "technology",
+          "url": "https://techcrunch.com/feed/"
+        },
+        {
+          "type": "rss",
+          "topic": "startups",
+          "url": "https://techcrunch.com/startups/feed/"
+        }
+      ],
+      "notes": "Feeds contain summary paragraphs and tags useful for categorisation."
+    },
+    {
+      "id": "cnbc",
+      "name": "CNBC",
+      "homepage": "https://www.cnbc.com",
+      "supportsTopics": ["markets", "finance", "technology", "policy"],
+      "endpoints": [
+        {
+          "type": "rss",
+          "topic": "markets",
+          "url": "https://www.cnbc.com/id/100003114/device/rss/rss.html"
+        },
+        {
+          "type": "rss",
+          "topic": "finance",
+          "url": "https://www.cnbc.com/id/19836768/device/rss/rss.html"
+        }
+      ],
+      "notes": "High-frequency feed; workflow throttles to top items per run."
+    }
+  ]
+}

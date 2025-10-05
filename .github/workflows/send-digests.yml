@@ -1,0 +1,60 @@
+name: Send competitor digests
+
+on:
+  schedule:
+    - cron: '0,30 * * * *'
+  workflow_dispatch:
+    inputs:
+      force_slot:
+        description: "Force primary or secondary window"
+        required: false
+        type: choice
+        default: auto
+        options:
+          - auto
+          - primary
+          - secondary
+
+permissions:
+  contents: write
+
+jobs:
+  dispatch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm install --no-fund --no-audit
+
+      - name: Send configured digests
+        env:
+          ENCRYPTION_KEY: ${{ secrets.NEWSLETTER_ENCRYPTION_KEY }}
+          REGISTRY_PATH: user-configs/registry.json
+          CATALOG_PATH: news-sources/catalog.json
+          SMTP_HOST: ${{ secrets.SMTP_HOST }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASS: ${{ secrets.SMTP_PASS }}
+          SMTP_FROM: ${{ secrets.SMTP_FROM }}
+          SMTP_SECURE: ${{ secrets.SMTP_SECURE || 'false' }}
+          DISPATCH_TIMEZONE: ${{ vars.DISPATCH_TIMEZONE || 'America/New_York' }}
+          MAX_ARTICLES_PER_SOURCE: ${{ vars.MAX_ARTICLES_PER_SOURCE || '6' }}
+          DISPATCH_WINDOW_MINUTES: ${{ vars.DISPATCH_WINDOW_MINUTES || '20' }}
+          FORCE_SLOT: ${{ github.event_name == 'workflow_dispatch' && inputs.force_slot || 'auto' }}
+          DRY_RUN: ${{ vars.DRY_RUN || 'false' }}
+        run: node scripts/send-digests.mjs
+
+      - name: Commit registry dispatch timestamps
+        if: always()
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: update newsletter dispatch log"
+          file_pattern: user-configs/registry.json

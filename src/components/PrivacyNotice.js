@@ -1,0 +1,3 @@
+import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+const PrivacyNotice = () => (_jsxs("section", { className: "privacy-panel", children: [_jsx("h3", { children: "Privacy + handling" }), _jsxs("ul", { children: [_jsx("li", { children: "Email addresses are passed into GitHub Actions and deleted after each send." }), _jsx("li", { children: "No database or persistent storage \u2014 GitHub workflow logs are scrubbed of addresses." }), _jsx("li", { children: "Credentials (SMTP/API keys) live only as GitHub Secrets controlled by the desk." }), _jsx("li", { children: "You can revoke access any time by deleting the issue/workflow or rotating the token." })] })] }));
+export default PrivacyNotice;

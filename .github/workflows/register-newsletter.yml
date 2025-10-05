@@ -1,0 +1,66 @@
+name: Register newsletter request
+
+on:
+  workflow_dispatch:
+    inputs:
+      email:
+        description: "Recipient email"
+        required: true
+        type: string
+      topics:
+        description: "Comma-separated topic IDs"
+        required: true
+        type: string
+      sources:
+        description: "Comma-separated source IDs"
+        required: true
+        type: string
+      primary_send_time:
+        description: "Primary delivery time (HH:MM 24h)"
+        required: true
+        type: string
+      secondary_send_time:
+        description: "Optional secondary delivery time (HH:MM 24h)"
+        required: false
+        type: string
+      notes:
+        description: "Optional internal notes"
+        required: false
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  register:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm install --no-fund --no-audit
+
+      - name: Register / update requester
+        run: node scripts/register-newsletter.mjs
+        env:
+          EMAIL: ${{ github.event.inputs.email }}
+          TOPICS: ${{ github.event.inputs.topics }}
+          SOURCES: ${{ github.event.inputs.sources }}
+          PRIMARY_SEND_TIME: ${{ github.event.inputs.primary_send_time }}
+          SECONDARY_SEND_TIME: ${{ github.event.inputs.secondary_send_time }}
+          NOTES: ${{ github.event.inputs.notes }}
+          ENCRYPTION_KEY: ${{ secrets.NEWSLETTER_ENCRYPTION_KEY }}
+          REGISTRY_PATH: user-configs/registry.json
+
+      - name: Commit registry updates
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: update newsletter registry"
+          file_pattern: user-configs/registry.json
